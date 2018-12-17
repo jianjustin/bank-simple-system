@@ -31,8 +31,22 @@ public class BasicSqlFactory {
         if(null == connection && Contants.mysqlType.equals(databaseType))
         	connection = BasicSqlFactory.getMySqlConnection();
         else if(null == connection)
-        	connection = BasicSqlFactory.getConnection();
+        	connection = BasicSqlFactory.getSqlServerConnection();
         return connection;
+    }
+    
+    /**
+     * 获取指定数据库连接到连接池
+     * @param databaseType
+     * @return
+     */
+    public static Connection getConnectionToPool(String databaseType){
+    	Connection myConnection = null;
+        if(Contants.mysqlType.equals(databaseType))
+        	myConnection = BasicSqlFactory.getMySqlConnection();
+        else
+        	myConnection = BasicSqlFactory.getSqlServerConnection();
+        return myConnection;
     }
     
     /**
@@ -40,7 +54,6 @@ public class BasicSqlFactory {
      * @return
      */
     public static Connection getSqlServerConnection() {
-    	 if(null != connection)return connection;
          try {
              DriverManager.registerDriver(new com.microsoft.sqlserver.jdbc.SQLServerDriver());
              connection = DriverManager.getConnection(Contants.sqlserverUrl, Contants.sqlserverUsername, Contants.sqlserverPassword);
@@ -57,7 +70,6 @@ public class BasicSqlFactory {
      * @return
      */
     public static Connection getMySqlConnection() {
-    	 if(null != connection)return connection;
          try {
              DriverManager.registerDriver(new Driver());
              connection = DriverManager.getConnection(Contants.mysqlUrl, Contants.mysqlUsername, Contants.mysqlPassword);

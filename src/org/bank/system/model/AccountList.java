@@ -3,6 +3,7 @@ package org.bank.system.model;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -74,7 +75,7 @@ public class AccountList {
     /**
      * 流水更新时间
      */
-    public Date accountListUpdateDate;
+    public Timestamp accountListUpdateDate;
 
     public BigDecimal getPkId() {
         return pkId;
@@ -140,11 +141,11 @@ public class AccountList {
         this.accountListCreateDate = accountListCreateDate;
     }
 
-    public Date getAccountListUpdateDate() {
+    public Timestamp getAccountListUpdateDate() {
         return accountListUpdateDate;
     }
 
-    public void setAccountListUpdateDate(Date accountListUpdateDate) {
+    public void setAccountListUpdateDate(Timestamp accountListUpdateDate) {
         this.accountListUpdateDate = accountListUpdateDate;
     }
 }

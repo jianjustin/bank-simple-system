@@ -27,13 +27,14 @@ public class BankAccountAPI {
   public ResultSet queryOne(BankAccount bankAccount){
 	  Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = BasicSqlFactory.getConnection();
+		Connection connection = SqlPoolFactory.getConnection();
 		try {
 			connection.setAutoCommit(false);
 			List<Object> paramValueList = new ArrayList<Object>();
 			
-			String queryTableSQL = "select * from bankSystemDb.dbo.bank_account"
+			String queryTableSQL = "select * from "+Contants.mySqlSchema+".bank_account"
 								 + " where 1=1 and BANK_ACCOUNT_CODE = ?"; 
+			System.out.println("执行SQL："+queryTableSQL);
 			PreparedStatement preparedStatement = connection.prepareStatement(queryTableSQL);
 			preparedStatement.setString(1, bankAccount.getBankAccountCode());
 			resultSet = preparedStatement.executeQuery();
@@ -45,6 +46,8 @@ public class BankAccountAPI {
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
+		}finally {
+			SqlPoolFactory.returnConnection(connection);
 		}
 		return resultSet;
   }
@@ -57,15 +60,15 @@ public class BankAccountAPI {
   public ResultSet queryAll(BankAccount bankAccount){
 	Statement statement = null;
 	ResultSet resultSet = null;
-	Connection connection = BasicSqlFactory.getConnection();
+	Connection connection = SqlPoolFactory.getConnection();
 	try {
 		connection.setAutoCommit(false);
 		List<Object> paramValueList = new ArrayList<Object>();
 		
-		String queryTableSQL = "select * from bankSystemDb.dbo.bank_account"
+		String queryTableSQL = "select * from "+Contants.mySqlSchema+".bank_account"
 							 + " where "; 
 		queryTableSQL += SqlUtils.getModleToWhereSql("", bankAccount, null, null, paramValueList, BankAccount.objToModelMap);
-		System.out.println(queryTableSQL);
+		System.out.println("执行SQL："+queryTableSQL);
 		PreparedStatement preparedStatement = connection.prepareStatement(queryTableSQL);
 		for (int i = 0; i < paramValueList.size(); i++) {
 			preparedStatement.setObject(i+1, paramValueList.get(i));
@@ -79,6 +82,8 @@ public class BankAccountAPI {
 			e1.printStackTrace();
 		}
 		e.printStackTrace();
+	}finally {
+		SqlPoolFactory.returnConnection(connection);
 	}
 	return resultSet;
   }
@@ -93,16 +98,16 @@ public class BankAccountAPI {
   public ResultSet queryByPage(BankAccount bankAccount,int offset,int limit){
 	  Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = BasicSqlFactory.getConnection();
+		Connection connection = SqlPoolFactory.getConnection();
 		try {
 			connection.setAutoCommit(false);
 			List<Object> paramValueList = new ArrayList<Object>();
 			
-			String queryTableSQL = "select * from bankSystemDb.dbo.bank_account"
+			String queryTableSQL = "select * from "+Contants.mySqlSchema+".bank_account"
 								 + " where "; 
 			queryTableSQL += SqlUtils.getModleToWhereSql("", bankAccount, null, null, paramValueList, BankAccount.objToModelMap);
 			//queryTableSQL += SqlUtils.getLimitParam(offset, limit);
-			System.out.println(queryTableSQL);
+			System.out.println("执行SQL："+queryTableSQL);
 			PreparedStatement preparedStatement = connection.prepareStatement(queryTableSQL,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
 			preparedStatement.setMaxFieldSize(offset+limit);//最大数据位置
 			for (int i = 0; i < paramValueList.size(); i++) {
@@ -121,6 +126,8 @@ public class BankAccountAPI {
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
+		}finally {
+			SqlPoolFactory.returnConnection(connection);
 		}
 		return resultSet;
   }
@@ -132,15 +139,16 @@ public class BankAccountAPI {
    */
   public String insert(BankAccount bankAccount) {
 	 Statement statement = null;
-	 Connection connection = BasicSqlFactory.getConnection();
-	 bankAccount.setBankAccountCode(getNextCode("bankSystemDb.dbo.bank_account","BANK_ACCOUNT_CODE"));
+	 Connection connection = SqlPoolFactory.getConnection();
+	 bankAccount.setBankAccountCode(getNextCode("bank_account","BANK_ACCOUNT_CODE"));
 	 try {
 		 
 		 connection.setAutoCommit(false);
-		String insertTableSQL = "INSERT INTO bankSystemDb.dbo.bank_account"
+		String insertTableSQL = "INSERT INTO "+Contants.mySqlSchema+".bank_account"
 							  + "(BANK_ACCOUNT_CODE, BANK_ACCOUNT_CARD, BANK_ACCOUNT_NAME, BANK_ACCOUNT_ID_CARD,BANK_ACCOUNT_PASSWORD, BANK_ACCOUNT_MONEY) VALUES"
 							  + "(?,?,?,?,?,?)";
 		
+		System.out.println("执行SQL："+insertTableSQL);
 		PreparedStatement preparedStatement = connection.prepareStatement(insertTableSQL);
 		//参数设置
 		preparedStatement.setString(1, bankAccount.getBankAccountCode());
@@ -160,25 +168,32 @@ public class BankAccountAPI {
 			e1.printStackTrace();
 		}
 		e.printStackTrace();
+	}finally {
+		SqlPoolFactory.returnConnection(connection);
 	}
 	 return bankAccount.getBankAccountCode();
   }
   
-  public ResultSet update(BankAccount bankAccount) {
+  /**
+   * 更新数据
+   * @param bankAccount
+   * @return
+   */
+  public int update(BankAccount bankAccount) {
 		 Statement statement = null;
-		 ResultSet resultSet = null;
-		 Connection connection = BasicSqlFactory.getConnection();
+		 int result = 0;
+		 Connection connection = SqlPoolFactory.getConnection();
 		 try {
 			connection.setAutoCommit(false);
-			String insertTableSQL = "update bankSystemDb.dbo.bank_account set"
+			String updateTableSQL = "update "+Contants.mySqlSchema+".bank_account set"
 								  + " BANK_ACCOUNT_CARD = ?,"
 								  + " BANK_ACCOUNT_NAME = ?,"
 								  + " BANK_ACCOUNT_ID_CARD = ?,"
-								  + " BANK_ACCOUNT_PASSWOED = ?,"
+								  + " BANK_ACCOUNT_PASSWORD = ?,"
 								  + " BANK_ACCOUNT_MONEY = ?"
 								  + " where BANK_ACCOUNT_CODE = ?";
-			System.out.println(insertTableSQL);
-			PreparedStatement preparedStatement = BasicSqlFactory.getConnection().prepareStatement(insertTableSQL);
+			System.out.println("执行SQL："+updateTableSQL);
+			PreparedStatement preparedStatement = connection.prepareStatement(updateTableSQL);
 			//参数设置
 			preparedStatement.setString(1, bankAccount.getBankAccountCard());
 			preparedStatement.setString(2, bankAccount.getBankAccountName());
@@ -187,7 +202,7 @@ public class BankAccountAPI {
 			preparedStatement.setString(5, bankAccount.getBankAccountMoney());
 			preparedStatement.setString(6, bankAccount.getBankAccountCode());
 			
-			preparedStatement .executeUpdate();
+			result = preparedStatement.executeUpdate();
 			connection.commit();
 		} catch (SQLException e) {
 			try {
@@ -196,21 +211,28 @@ public class BankAccountAPI {
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
+		}finally {
+			SqlPoolFactory.returnConnection(connection);
 		}
-		 return resultSet;
+		 return result;
 	  }
   
+  /**
+   * 删除数据
+   * @param bankAccount
+   * @return
+   */
   public ResultSet delete(BankAccount bankAccount) {
 		 Statement statement = null;
 		 ResultSet resultSet = null;
-		 Connection connection = BasicSqlFactory.getConnection();
+		 Connection connection = SqlPoolFactory.getConnection();
 		 try {
 			connection.setAutoCommit(false);
-			String deleteTableSQL = "delete bankSystemDb.dbo.bank_account "
+			String deleteTableSQL = "delete from "+Contants.mySqlSchema+".bank_account "
 								  + " where BANK_ACCOUNT_CODE = ?";
 			
 			System.out.println("执行SQL："+deleteTableSQL);
-			PreparedStatement preparedStatement = BasicSqlFactory.getConnection().prepareStatement(deleteTableSQL);
+			PreparedStatement preparedStatement = connection.prepareStatement(deleteTableSQL);
 			//参数设置
 			preparedStatement.setString(1, bankAccount.getBankAccountCode());
 			
@@ -227,6 +249,8 @@ public class BankAccountAPI {
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
+		}finally {
+			SqlPoolFactory.returnConnection(connection);
 		}
 		 return resultSet;
 	  }
@@ -241,28 +265,68 @@ public class BankAccountAPI {
 	    Statement statement = null;
 		ResultSet resultSet = null;
 		String result = "00000000";
+		Connection connection = SqlPoolFactory.getConnection();
 		try {
-			statement = BasicSqlFactory.getConnection().createStatement();
-			statement.executeQuery("select max("+columnName+") as max_code from "+tableName);
+			statement = connection.createStatement();
+			statement.executeQuery("select max("+columnName+") as max_code from "+Contants.mySqlSchema+"."+tableName);
 			resultSet = statement.getResultSet();
 			if(!resultSet.next())return result;
 			result = resultSet.getString("max_code");
-			if(StringUtils.isNotBlank(result))
-			  result = String.format("%08d", (new Integer(result)+1));;
+			if(StringUtils.isBlank(result))result = "00000000";
+			result = String.format("%08d", (new Integer(result)+1));
 			System.out.println(result);
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}finally {
+			SqlPoolFactory.returnConnection(connection);
 		}
 		return result;
   }
   
   public static void main(String[] args) {
-	  BankAccount bankAccount = new BankAccount();
-	  bankAccount.setBankAccountCode("00000000");
+	  //TEST BEGIN
+	  
 	  BankAccountAPI bankAccountAPI = new BankAccountAPI();
-	  ResultSet resultSet = bankAccountAPI.queryByPage(bankAccount,0,10);
+	  /*1. INSERT*/
+//	  BankAccount insertBankAccount = new BankAccount();
+//	  insertBankAccount.setBankAccountCode("00000001");
+//	  insertBankAccount.setBankAccountName("蓟份号");
+//	  insertBankAccount.setBankAccountCard("6222020903001483077");
+//	  insertBankAccount.setBankAccountIdCard("420101199104178366");
+//	  insertBankAccount.setBankAccountPassword("123456");
+//	  insertBankAccount.setBankAccountMoney("0.00");
+//	  bankAccountAPI.insert(insertBankAccount);
+	  
+	  /*4. queryOne*/
+	  BankAccount bankAccount = new BankAccount();
+	  bankAccount.setBankAccountCode("00000001");
+	  ResultSet resultSet = bankAccountAPI.queryOne(bankAccount);
 	  List<Map<String,Object>> list = SqlUtils.resultSetToMap(resultSet);
 	  System.out.println(list);
+	  
+	  /*2. UPDATE*/
+//	  bankAccount = SqlUtils.mapToObject(SqlUtils.columnMapToObjMap1(list.get(0)), BankAccount.class);
+//	  bankAccount.setBankAccountPassword("12345678");
+//	  bankAccountAPI.update(bankAccount);
+	  
+	  /*2. DELETE*/
+//	  bankAccount = SqlUtils.mapToObject(SqlUtils.columnMapToObjMap1(list.get(0)), BankAccount.class);
+//	  bankAccountAPI.delete(bankAccount);
+	  
+	  /*4. query*/
+	  bankAccount = new BankAccount();
+	  bankAccount.setBankAccountCode("00000001");
+	  resultSet = bankAccountAPI.queryByPage(bankAccount,0,10);
+	  list = SqlUtils.resultSetToMap(resultSet);
+	  System.out.println(list);
+	  
+	  /*4. queryAll*/
+	  bankAccount = new BankAccount();
+	  resultSet = bankAccountAPI.queryAll(bankAccount);
+	  list = SqlUtils.resultSetToMap(resultSet);
+	  System.out.println(list);
+	  
+	  //TEST END
   }
 
 }

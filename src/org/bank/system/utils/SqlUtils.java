@@ -1,13 +1,18 @@
 package org.bank.system.utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.bank.system.model.AccountList;
+import org.bank.system.model.BankAccount;
 
 /**
  * SQL工具类
@@ -48,16 +53,18 @@ public class SqlUtils {
 				if(StringUtils.isNotBlank(prefix))colName=prefix+"."+colName;
 					
 				if(StringUtils.isNotBlank(objValue)){
-					if(StringUtils.isNotBlank(sql)) sql+=split;//添加and分隔符
 					if (colType.equals("class java.lang.String")) {
 						if(likeFlag) {
+							if(StringUtils.isNotBlank(sql)) sql+=split;//添加and分隔符
 							sql += columnName + " like ?";
 							paramValueList.add("%" + objValue + "%");
 						}else {
+							if(StringUtils.isNotBlank(sql)) sql+=split;//添加and分隔符
 							sql += columnName + " = ?";
 							paramValueList.add(objValue);
 						}
 					}else if(colType.equals("class java.lang.Long")||colType.equals("class java.lang.Integer")|| colType.equals("class java.lang.Double")|| colType.equals("class java.lang.Float")){
+						if(StringUtils.isNotBlank(sql)) sql+=split;//添加and分隔符
 						sql += columnName + " = ?";
 						paramValueList.add(objValue);
 						
@@ -149,25 +156,99 @@ public class SqlUtils {
 		return list;
 	}
 	
+	public static Map<String,Object> columnMapToObjMap1(Map<String,Object> columnMap){
+		Map<String,Object> objMap = new HashMap<String,Object>();
+		Iterator<String> iterator = columnMap.keySet().iterator();
+		while(iterator.hasNext()) {
+			String item = iterator.next();
+			objMap.put(BankAccount.modelToObjMap.get(item), columnMap.get(item));
+		}
+		return objMap;
+	}
 	
+	public static Map<String,Object> columnMapToObjMap2(Map<String,Object> columnMap){
+		Map<String,Object> objMap = new HashMap<String,Object>();
+		Iterator<String> iterator = columnMap.keySet().iterator();
+		while(iterator.hasNext()) {
+			String item = iterator.next();
+			objMap.put(AccountList.modelToObjMap.get(item), columnMap.get(item));
+		}
+		return objMap;
+	}
 	
-//	public static <D> List<D> resultSetToPojo(ResultSet resultSet,Class<D> clazz){
-//		List<D> list = new ArrayList<D>();
-//		try {
-//			D pojo = clazz.newInstance();
-//			int columnCount = resultSet.getColumnCount();   //获得列数 
-//			while (resultSet.next()) {
-//				Map<String,Object> rowData = new HashMap<String,Object>();
-//				for (int i = 1; i <= columnCount; i++) {
-//					rowData.put(resultSet.getColumnName(i), resultSet.getObject(i));
-//				}
-//				list.add(rowData);
-//	 
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return list;
-//	}
+	/**
+	 * map数据转obj对象数据
+	 * @param map
+	 * @param beanClass
+	 * @return
+	 * @throws Exception
+	 */
+	public static <D> D mapToObject(Map<String, Object> map, Class<D> beanClass){    
+        if (map == null)  
+            return null;    
+  
+        D obj = null;
+		try {
+			obj = beanClass.newInstance();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}  
+  
+        Field[] fields = obj.getClass().getDeclaredFields();   
+        for (Field field : fields) {    
+            int mod = field.getModifiers();   
+            if(Modifier.isStatic(mod) || Modifier.isFinal(mod)){    
+                continue;    
+            }    
+  
+            field.setAccessible(true);    
+            try {
+				field.set(obj, map.get(field.getName()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}   
+        }   
+  
+        return obj;    
+    }    
+	
+	/**
+	 * map数据转obj对象数据
+	 * @param map
+	 * @param beanClass
+	 * @return
+	 * @throws Exception
+	 */
+	public static <D> List<D> mapListToObjectList(List<Map<String, Object>> mapList, Class<D> beanClass){    
+        List<D> list = new ArrayList<D>();
+        for (int i = 0; i < mapList.size(); i++) {
+        	list.add(mapToObject(mapList.get(i), beanClass));
+		}
+        
+        return list;    
+    } 
+  
+	/**
+	 * obj数据转map数据
+	 * @param obj
+	 * @return
+	 * @throws Exception
+	 */
+    public static <D> Map<String, Object> objectToMap(D obj){    
+        if(obj == null)return null;    
+        Map<String, Object> map = new HashMap<String, Object>();    
+  
+        Field[] declaredFields = obj.getClass().getDeclaredFields();    
+        for (Field field : declaredFields) {    
+            field.setAccessible(true);  
+            try {
+				map.put(field.getName(), field.get(obj));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}  
+        }    
+
+        return map;  
+    }  
 
 }

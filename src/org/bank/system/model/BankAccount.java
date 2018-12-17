@@ -2,6 +2,7 @@ package org.bank.system.model;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class BankAccount {
 		modelToObjMap.put("PK_ID", "PK_ID");
 		modelToObjMap.put("BANK_ACCOUNT_CODE", "bankAccountCode");
 		modelToObjMap.put("BANK_ACCOUNT_CARD", "bankAccountCard");
-		modelToObjMap.put("BANK_ACCOUNT_PASSWORD", "bankAccountPssword");
+		modelToObjMap.put("BANK_ACCOUNT_PASSWORD", "bankAccountPassword");
 		modelToObjMap.put("BANK_ACCOUNT_NAME", "bankAccountName");
 		modelToObjMap.put("BANK_ACCOUNT_ID_CARD", "bankAccountIdCard");
 		modelToObjMap.put("BANK_ACCOUNT_MONEY", "bankAccountMoney");
@@ -73,7 +74,7 @@ public class BankAccount {
     /**
      * 账户最后更新时间
      */
-    public Date bankAccountUpdateTime;
+    public Timestamp bankAccountUpdateTime;
 
     public BigDecimal getPkId() {
         return pkId;
@@ -131,11 +132,11 @@ public class BankAccount {
         this.bankAccountCreateTime = bankAccountCreateTime;
     }
 
-    public Date getBankAccountUpdateTime() {
+    public Timestamp getBankAccountUpdateTime() {
         return bankAccountUpdateTime;
     }
 
-    public void setBankAccountUpdateTime(Date bankAccountUpdateTime) {
+    public void setBankAccountUpdateTime(Timestamp bankAccountUpdateTime) {
         this.bankAccountUpdateTime = bankAccountUpdateTime;
     }
     public String getBankAccountPassword() {
@@ -145,4 +146,5 @@ public class BankAccount {
 	public void setBankAccountPassword(String bankAccountPassword) {
 		this.bankAccountPassword = bankAccountPassword;
 	}
+	
 }

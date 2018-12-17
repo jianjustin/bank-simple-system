@@ -20,6 +20,7 @@ import java.awt.Panel;
 import java.awt.CardLayout;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class BankSystemUI2 extends JFrame {
 
@@ -28,7 +29,6 @@ public class BankSystemUI2 extends JFrame {
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
-	private JTextField textField_4;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -57,32 +57,32 @@ public class BankSystemUI2 extends JFrame {
 		splitPane.setRightComponent(panel);
 		panel.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setBounds(43, 31, 61, 16);
+		JLabel lblNewLabel = new JLabel("转账");
+		lblNewLabel.setBackground(Color.DARK_GRAY);
+		lblNewLabel.setBounds(43, 31, 232, 16);
 		panel.add(lblNewLabel);
 		
-		JLabel lblNewLabel_2 = new JLabel("New label");
-		lblNewLabel_2.setBounds(43, 70, 61, 16);
+		JLabel lblNewLabel_2 = new JLabel("银行卡号：");
+		lblNewLabel_2.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblNewLabel_2.setBounds(30, 70, 74, 16);
 		panel.add(lblNewLabel_2);
 		
-		JLabel lblNewLabel_4 = new JLabel("New label");
-		lblNewLabel_4.setBounds(43, 113, 61, 16);
+		JLabel lblNewLabel_4 = new JLabel("账号密码：");
+		lblNewLabel_4.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblNewLabel_4.setBounds(30, 113, 74, 16);
 		panel.add(lblNewLabel_4);
 		
-		JLabel lblNewLabel_6 = new JLabel("New label");
-		lblNewLabel_6.setBounds(43, 163, 61, 16);
+		JLabel lblNewLabel_6 = new JLabel("取款金额：");
+		lblNewLabel_6.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblNewLabel_6.setBounds(30, 158, 74, 16);
 		panel.add(lblNewLabel_6);
 		
-		JButton btnNewButton = new JButton("New button");
-		btnNewButton.setBounds(225, 416, 117, 29);
-		panel.add(btnNewButton);
-		
-		JButton btnNewButton_1 = new JButton("New button");
+		JButton btnNewButton_1 = new JButton("提交");
 		btnNewButton_1.setBounds(371, 416, 117, 29);
 		panel.add(btnNewButton_1);
 		
 		textField = new JTextField();
-		textField.setBounds(145, 26, 130, 26);
+		textField.setBounds(145, 153, 130, 26);
 		panel.add(textField);
 		textField.setColumns(10);
 		
@@ -96,19 +96,15 @@ public class BankSystemUI2 extends JFrame {
 		panel.add(textField_2);
 		textField_2.setColumns(10);
 		
-		textField_3 = new JTextField();
-		textField_3.setBounds(145, 158, 130, 26);
-		panel.add(textField_3);
-		textField_3.setColumns(10);
-		
-		JLabel lblNewLabel_1 = new JLabel("New label");
-		lblNewLabel_1.setBounds(43, 199, 61, 16);
+		JLabel lblNewLabel_1 = new JLabel("对方卡号：");
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblNewLabel_1.setBounds(30, 202, 74, 16);
 		panel.add(lblNewLabel_1);
 		
-		textField_4 = new JTextField();
-		textField_4.setBounds(145, 194, 130, 26);
-		panel.add(textField_4);
-		textField_4.setColumns(10);
+		textField_3 = new JTextField();
+		textField_3.setBounds(145, 197, 130, 26);
+		panel.add(textField_3);
+		textField_3.setColumns(10);
 		
 		Panel panel_1 = new Panel();
 		splitPane.setLeftComponent(panel_1);
