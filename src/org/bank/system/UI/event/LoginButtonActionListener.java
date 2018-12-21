@@ -46,6 +46,8 @@ public class LoginButtonActionListener extends ButtonActionListener{
 			/*存储当前用户信息*/
 			bankSystemUI.loginSuccessBankAccount = oldBankAccount;
 			/*登录成功，跳转主界面*/
+			this.jTextField.setText("");
+			this.jPasswordField.setText("");
 			bankSystemUI.initMenuUI(e);
 		}else {//登录失败
 			JOptionPane.showOptionDialog(null, "登录失败：用户名或密码错误，请重新输入", "消息",JOptionPane.PLAIN_MESSAGE, 0, new ImageIcon(bankSystemUI.image), null, null);

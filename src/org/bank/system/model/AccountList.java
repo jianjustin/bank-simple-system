@@ -40,6 +40,15 @@ public class AccountList {
 		
 	}
 	
+	public AccountList() {}
+	public AccountList(String accountListInCode,String accountListOutCode,String accountListType,String accountListMoney,String accountListStatus) {
+		this.accountListInCode = accountListInCode;
+		this.accountListOutCode = accountListOutCode;
+		this.accountListType = accountListType;
+		this.accountListMoney =  accountListMoney;
+		this.accountListStatus = accountListStatus;
+	}
+	
     /**
      * 主键ID
      */
@@ -57,7 +66,7 @@ public class AccountList {
      */
     public String accountListOutCode;
     /**
-     * 流水类型
+     * 流水类型（0-存款；1-取款；2-转账）
      */
     public String accountListType;
     /**

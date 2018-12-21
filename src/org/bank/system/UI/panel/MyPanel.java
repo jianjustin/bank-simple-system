@@ -138,8 +138,18 @@ public class MyPanel{
 		
 		JButton button = new JButton("注册");
 		button.setBounds(270, 224, 117, 29);
+		
+		JButton backButton = new JButton("返回");
+		backButton.setBounds(400, 224, 117, 29);
+		panel.add(backButton);
 		/*添加注册事件*/
-		button.addActionListener(new RegisterButtonActionListener(textField.getText(), textField_1.getText(), textField_2.getText(), new String(passwordField.getPassword()), new String(passwordField_1.getPassword())));
+		button.addActionListener(new RegisterButtonActionListener(textField,textField_1,textField_2,passwordField,passwordField_1));
+		backButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				bankSystemUI.myPanel.exit(e);
+			}
+		});
 		panel.add(button);
 		return panel;
 		
@@ -223,6 +233,7 @@ public class MyPanel{
 			textField_1.setText(bankSystemUI.loginSuccessBankAccount.getBankAccountCard());
 			textField_2.setText(bankSystemUI.loginSuccessBankAccount.getBankAccountIdCard());
 			textField_3.setText(bankSystemUI.loginSuccessBankAccount.getBankAccountPassword());
+			textField_4.setText(bankSystemUI.loginSuccessBankAccount.getBankAccountMoney());
 		}
 		
 		editButton.addActionListener(new ActionListener() {
@@ -456,15 +467,8 @@ public class MyPanel{
 	 * @return
 	 */
 	public JPanel exit(ActionEvent... e) {
-		bankSystemUI.jFrame.setSize(UIContants.frame_width, UIContants.frame_height);
-		FlowLayout flowLayout = new FlowLayout(1,UIContants.frame_width/2-UIContants.frame_login_panel_width/2,UIContants.frame_height/2-UIContants.frame_login_panel_height/2);
-		bankSystemUI.jFrame.setLayout(flowLayout);
-		bankSystemUI.jFrame.setJMenuBar(null);
-		bankSystemUI.contentPane.remove(bankSystemUI.jPanel);
-		bankSystemUI.contentPane.add(bankSystemUI.loginJPanel);
-		bankSystemUI.jPanel = bankSystemUI.loginJPanel;
-		bankSystemUI.contentPane.validate();//重构内容面板
-		bankSystemUI.contentPane.repaint();//重绘内容面板
+		bankSystemUI.loginSuccessBankAccount = null;
+		updateUI(bankSystemUI.loginJPanel, new FlowLayout(1,UIContants.frame_width/2-UIContants.frame_login_panel_width/2,UIContants.frame_height/2-UIContants.frame_login_panel_height/2), UIContants.frame_width, UIContants.frame_height, null);
 		return bankSystemUI.jPanel;
 		
 	}
@@ -497,7 +501,7 @@ public class MyPanel{
 		bankSystemUI.contentPane.remove(bankSystemUI.jPanel);//移除登录容器
 		bankSystemUI.jFrame.setLayout(layoutManager);//清空布局
 		bankSystemUI.jFrame.setJMenuBar(menubar);//初始化头部菜单栏
-		bankSystemUI.jFrame.setSize(UIContants.frame_main_width, UIContants.frame_main_height);
+		bankSystemUI.jFrame.setSize(width, height);
 		bankSystemUI.contentPane.add(panel);
 		bankSystemUI.jPanel = panel;//保存当前面板
 		bankSystemUI.contentPane.validate();//重构内容面板

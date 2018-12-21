@@ -2,6 +2,8 @@ package org.bank.system.UI.event;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import org.bank.system.model.BankAccount;
@@ -45,6 +47,9 @@ public class InformationChangedActionListener extends ButtonActionListener{
 		
 		bankAccount = BankAccountService.update(bankAccount);
 		bankSystemUI.loginSuccessBankAccount = bankAccount;//更新登录信息
+		bankSystemUI.myPanel.showInformation(e);
+		JOptionPane.showOptionDialog(null, "修改信息完成！", "消息",JOptionPane.PLAIN_MESSAGE, 0, new ImageIcon(bankSystemUI.image), null, null);
+	
 	}
 
 }

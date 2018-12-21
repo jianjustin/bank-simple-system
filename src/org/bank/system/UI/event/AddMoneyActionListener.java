@@ -9,7 +9,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import org.bank.system.model.AccountList;
 import org.bank.system.model.BankAccount;
+import org.bank.system.service.AccountListService;
 import org.bank.system.service.BankAccountService;
 
 /**
@@ -54,11 +56,19 @@ public class AddMoneyActionListener extends ButtonActionListener{
 		double newMoneyValue = oldMoneyValue + moneyValue;
 		String newMoney = Double.toString(newMoneyValue);
 		bankAccount.setBankAccountMoney(newMoney);
-		/*TODO 生成账户流水信息*/
+		
 		bankAccount = BankAccountService.update(bankAccount);
 		bankSystemUI.loginSuccessBankAccount = bankAccount;//更新登录信息
+		/*生成账户流水信息*/
+		AccountList accountList = new AccountList(bankAccount.getBankAccountCode(), null, "0", Double.toString(moneyValue), "0");
+		AccountListService.insert(accountList);
 		
-		bankSystemUI.myPanel.showInformation(e);
+		/*重置数据*/
+		this.textField.setText("");;
+		this.textField_2.setText("");;
+		this.jPasswordField.setText("");;
+		bankSystemUI.myPanel.addMoney(e);
+		JOptionPane.showOptionDialog(null, "存款完成！         ", "消息",JOptionPane.PLAIN_MESSAGE, 0, new ImageIcon(bankSystemUI.image), null, null);
 	}
 
 }

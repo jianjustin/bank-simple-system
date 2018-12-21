@@ -23,7 +23,7 @@ public class SqlPoolFactory {
 	
 	static {
 		SqlPoolFactory.initConnectionSize = 2;
-		SqlPoolFactory.initConnectionPool();
+		//SqlPoolFactory.initConnectionPool();
 	}
 	
 	/**

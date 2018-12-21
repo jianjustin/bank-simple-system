@@ -133,7 +133,7 @@ public class AccountListAPI {
 	   * @param bankAccount
 	   * @return
 	   */
-	  public AccountList insert(AccountList accountList) {
+	  public String insert(AccountList accountList) {
 		 Statement statement = null;
 		 Connection connection = SqlPoolFactory.getConnection();
 		 accountList.setAccountListCode(getNextCode("account_list","ACCOUNT_LIST_CODE"));
@@ -167,7 +167,7 @@ public class AccountListAPI {
 		}finally {
 			SqlPoolFactory.returnConnection(connection);
 		}
-		 return accountList;
+		 return accountList.getAccountListCode();
 	  }
 	  
 	  public AccountList update(AccountList accountList) {

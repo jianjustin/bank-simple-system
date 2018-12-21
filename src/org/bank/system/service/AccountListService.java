@@ -1,10 +1,13 @@
 package org.bank.system.service;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.bank.system.database.AccountListAPI;
 import org.bank.system.database.BankAccountAPI;
+import org.bank.system.model.AccountList;
 import org.bank.system.model.BankAccount;
 import org.bank.system.utils.SqlUtils;
 
@@ -15,36 +18,39 @@ import org.bank.system.utils.SqlUtils;
  */
 public class AccountListService {
 	
-	public static BankAccountAPI bankAccountAPI = new BankAccountAPI();
+	public static AccountListAPI accountListAPI = new AccountListAPI();
 	
 	/**
-	 * 用户注册
+	 * 插入流水
 	 * @param bankAccount
 	 * @return
 	 */
-	public static BankAccount register(BankAccount bankAccount) {
-		bankAccount.setBankAccountMoney("0.00");
-		String bankAccountCode = bankAccountAPI.insert(bankAccount);
-		bankAccount.setBankAccountCode(bankAccountCode);
-		/*根据用户编号进行查询*/
-		BankAccount newBankAccount = SqlUtils.mapToObject(SqlUtils.columnMapToObjMap1(SqlUtils.resultSetToMap(bankAccountAPI.queryOne(bankAccount)).get(0)),BankAccount.class);
-		return newBankAccount;
+	public static AccountList insert(AccountList accountList) {
+		String accountListCode = accountListAPI.insert(accountList);
+		accountList.setAccountListCode(accountListCode);
+		/*根据流水编号进行查询*/
+		AccountList newAccountList = SqlUtils.mapToObject(SqlUtils.columnMapToObjMap1(SqlUtils.resultSetToMap(accountListAPI.queryOne(accountList)).get(0)),AccountList.class);
+		return newAccountList;
 	}
 	
 	/**
-	 * 用户登录
+	 * 查询流水
 	 * @param bankAccount
 	 * @return
 	 */
-	public static BankAccount login(BankAccount bankAccount) {
+	public static List<AccountList> queryAll(AccountList accountList) {
 		//根据账号密码进行查询
-		ResultSet resultSet = bankAccountAPI.queryAll(bankAccount);
+		ResultSet resultSet = accountListAPI.queryAll(accountList);
 		/*resultSet转list*/
 		List<Map<String,Object>> mapList = SqlUtils.resultSetToMap(resultSet);
-		BankAccount oldBankAccount = new BankAccount();
-		if(null == mapList || mapList.size() == 0)return oldBankAccount;
-		oldBankAccount = SqlUtils.mapToObject(SqlUtils.columnMapToObjMap1(mapList.get(0)),BankAccount.class);
-		return oldBankAccount;
+		List<AccountList> list = new ArrayList<AccountList>();
+		if(null == mapList || mapList.size() == 0)return list;
+		for (int i = 0; i < mapList.size(); i++) {
+			AccountList oldAccountList = new AccountList();
+			oldAccountList = SqlUtils.mapToObject(SqlUtils.columnMapToObjMap1(mapList.get(i)),AccountList.class);
+			list.add(oldAccountList);
+		}
+		return list;
 	}
 
 }

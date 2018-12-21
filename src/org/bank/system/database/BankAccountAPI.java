@@ -113,10 +113,6 @@ public class BankAccountAPI {
 			for (int i = 0; i < paramValueList.size(); i++) {
 				preparedStatement.setObject(i+1, paramValueList.get(i));
 			}
-//			if(resultSet.next()){
-//				resultSet = preparedStatement.executeQuery();
-//				resultSet.relative(offset);
-//			}
 			resultSet = preparedStatement.executeQuery();
 			connection.commit();
 		} catch (SQLException e) {

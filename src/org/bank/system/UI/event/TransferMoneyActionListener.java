@@ -9,7 +9,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import org.bank.system.model.AccountList;
 import org.bank.system.model.BankAccount;
+import org.bank.system.service.AccountListService;
 import org.bank.system.service.BankAccountService;
 import org.bank.system.utils.StringUtils;
 
@@ -73,12 +75,21 @@ public class TransferMoneyActionListener extends ButtonActionListener{
 		bankAccount.setBankAccountMoney(newMoney);
 		oldOtherBankAccount.setBankAccountMoney(newMoney2);
 		
-		/*TODO 生成账户流水信息*/
 		bankAccount = BankAccountService.update(bankAccount);
 		bankAccount = BankAccountService.update(oldOtherBankAccount);
 		bankSystemUI.loginSuccessBankAccount = bankAccount;//更新登录信息
+		/*生成账户流水信息*/
+		AccountList accountList = new AccountList(oldOtherBankAccount.getBankAccountCode(), bankAccount.getBankAccountCode(), "2", Double.toString(moneyValue), "0");
+		AccountListService.insert(accountList);
 		
-		bankSystemUI.myPanel.showInformation(e);
+		/*清空数据*/
+		this.textField.setText("");;
+		this.textField_2.setText("");;
+		this.textField_3.setText("");;
+		this.jPasswordField.setText("");;
+		bankSystemUI.myPanel.transferMoney(e);
+		JOptionPane.showOptionDialog(null, "转账完成！           ", "消息",JOptionPane.PLAIN_MESSAGE, 0, new ImageIcon(bankSystemUI.image), null, null);
+	
 	}
 
 }
